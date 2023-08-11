@@ -1,0 +1,49 @@
+<% layout('/layouts/bolerplate') %>
+<div class="row">
+  <div class="col-8 offset-2">
+    <h1 class="text-center">Register</h1>
+    <form method="post" action="/register" class="validation" novalidate>
+      <div class="form-group">
+        <label for="email">username</label>
+        <input
+          type="text"
+          class="form-control"
+          id="username"
+          name="username"
+          aria-describedby="emailHelp"
+          required
+        />
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          name="email"
+          aria-describedby="emailHelp"
+          required
+        />
+        <div class="valid-feedback">Looks good!</div>
+
+        <small id="emailHelp" class="form-text text-muted"
+          >We'll never share your email with anyone else.</small
+        >
+      </div>
+      <div class="form-group mb-3">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          name="password"
+          required
+        />
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>

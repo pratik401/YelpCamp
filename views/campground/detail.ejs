@@ -1,0 +1,104 @@
+<% layout('layouts/bolerplate') %>
+
+<div class="row">
+  <div class="col-6 mb-3">
+    
+      <div class="card">
+        <div class="card-body">
+          <img class="card-img-top" src="<%= camp.image.url %>" alt="Card image cap">
+          <h5 class="card-title"><%= camp.title %></h5>
+          <p class="card-text"><%= camp.discription %></p>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item text-muted"><%= camp.location %></li>
+
+          <li class="list-group-item">$<%= camp.price %>/night</li>
+          <li class="list-group-item text-muted">
+            Author - <%= camp.author.username %>
+          </li>
+        </ul>
+        <% if( currentUser && camp.author.equals(currentUser._id)) {%>
+        <div class="card-body">
+          <div class="btn btn-primary">
+            <a class="text-white" href="/campgrounds/<%= camp._id %>/edit "
+              >edit</a
+            >
+          </div>
+
+          <form
+            class="d-inline"
+            action="/campgrounds/<%= camp._id %>?_method=DELETE"
+            method="post"
+          >
+            <button class="btn btn-danger">Delete</button>
+          </form>
+        </div>
+        <% } %>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="mb-3" id='map' style=' height: 300px;'></div>
+      <h3>Leave a Review</h3>
+      <form
+        class="mb-3"
+        action="/campgrounds/<%= camp._id %>/review"
+        method="post"
+      >
+        <label class="form-lable" for="rating">rating</label>
+        <input
+          class="form-range"
+          min="0"
+          max="5"
+          type="range"
+          id="rating"
+          name="rev[rating]"
+        />
+        <label class="form-lable" for="review">review</label>
+        <textarea
+          class="form-control mb-3"
+          name="rev[review]"
+          id="review"
+          cols="30"
+          rows="3"
+        ></textarea>
+        <button class="btn btn-primary">Submit</button>
+      </form>
+      <h2>All Reviews</h2>
+      <% for(review of camp.review) {%>
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Rating:<%= review.rating %></h5>
+          <h6 class="card-subtitle mb-2 text-muted">
+            PostBy <%= review.user.username %>
+          </h6>
+          <p class="card-text"><%= review.review %></p>
+          <% if( currentUser && review.user.equals(currentUser._id)) {%>
+          <form
+            action="/campgrounds/<%= camp._id %>/review/<%= review._id %>?_method=DELETE"
+            method="post"
+          >
+            <button class="btn btn-sm btn-danger">Delete</button>
+          </form>
+          <% } %>
+        </div>
+      </div>
+
+      <% } %>
+    </div>
+  </div>
+</div>
+<script>
+  const campground = <%- JSON.stringify(camp)%>;
+</script>
+<script>
+  mapboxgl.accessToken = '<%-process.env.MAPBOX_TOKEN%>' ;
+  const map = new mapboxgl.Map({
+  container: 'map', // container ID
+  style: 'mapbox://styles/mapbox/streets-v12', // style URL
+  center: campground.geometry.coordinates, // starting position [lng, lat]
+  zoom: 9, // starting zoom
+  });
+  const marker1 = new mapboxgl.Marker()
+.setLngLat(campground.geometry.coordinates)
+.addTo(map);
+  </script>
